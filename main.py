@@ -76,7 +76,6 @@ def RPNconversion(array):
             RPNarray.append(value)
     return RPNarray
 
-
 # 2 Solve the equation
 def addition(b, a):
     return a + b
@@ -96,7 +95,6 @@ def division(b, a):
 
 def power(b, a):
     return a ** b
-
 
 # 2.1 Traverse the array L to R
 def evaluate(array):
