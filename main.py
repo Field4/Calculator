@@ -1,6 +1,6 @@
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
-def arrayConversion(equation):
+def arrayconversion(equation):
     data = []
     i = 0
     while i < len(equation):
@@ -16,14 +16,14 @@ def arrayConversion(equation):
     j = 0
     length = len(data)
     while j < length:
-        if data[j] == "":
+        if data[j] == '' or data[j] == " ":
             data.pop(j)
             length -= 1
         j += 1
     return data
 
 
-def stackCheck(data, array):
+def stackcheck(data, array):
     importance = {"+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
     length = len(array)
     if data == "(" or data == ")":
@@ -34,9 +34,10 @@ def stackCheck(data, array):
             return True
     return False
 
+
 # 1.2 using a dictionary array saying the order of operator importance, evaluate into RPN
-def RPNconversion(array):
-    RPNarray = []
+def rpnconversion(array):
+    rpnarray = []
     stack = []
     operator = True
     negative = ""
@@ -45,36 +46,37 @@ def RPNconversion(array):
             negative = ""
         if array[i].isdigit():
             operator = False
-            RPNarray.append(negative + array[i])
+            rpnarray.append(negative + array[i])
         elif array[i] == ")":
             value = stack.pop()
             while value != "(":
-                RPNarray.append(value)
+                rpnarray.append(value)
                 if len(stack) > 0:
                     value = stack.pop()
         else:
             if operator is True and array[i] == "-":
-                if len(RPNarray) == 0 and len(negative) == 1:
+                if len(rpnarray) == 0 and len(negative) == 1:
                     negative = ""
                     operator = True
                 elif len(negative) == 1:
-                    RPNarray.append(array[i])
+                    rpnarray.append(array[i])
                 else:
                     negative += array[i]
             elif len(stack) > 0:
                 operator = True
-                while stackCheck(array[i], stack):
+                while stackcheck(array[i], stack):
                     value = stack.pop()
-                    RPNarray.append(value)
+                    rpnarray.append(value)
                 stack.append(array[i])
             else:
                 operator = True
                 stack.append(array[i])
-    if len(stack)-1 != -1:
-        while len(stack)-1 != -1:
+    if len(stack) - 1 != -1:
+        while len(stack) - 1 != -1:
             value = stack.pop()
-            RPNarray.append(value)
-    return RPNarray
+            rpnarray.append(value)
+    return rpnarray
+
 
 # 2 Solve the equation
 def addition(b, a):
@@ -96,30 +98,31 @@ def division(b, a):
 def power(b, a):
     return a ** b
 
+
 # 2.1 Traverse the array L to R
 def evaluate(array):
-    evaluationStack = []
+    evaluationstack = []
     for count in range(len(array)):
         if array[count] == " ":
             array.pop(count)
     for i in range(len(array)):
         if len(array[i]) > 1 and array[i][0] == "-":
             if array[i][1:].isdigit():
-                evaluationStack.append(array[i])
+                evaluationstack.append(array[i])
         elif array[i].isdigit():
-            evaluationStack.append(array[i])
+            evaluationstack.append(array[i])
         else:
             if array[i] == "+":
-                evaluationStack.append(addition(float(evaluationStack.pop()), float(evaluationStack.pop())))
+                evaluationstack.append(addition(float(evaluationstack.pop()), float(evaluationstack.pop())))
             elif array[i] == "-":
-                evaluationStack.append(subtraction(float(evaluationStack.pop()), float(evaluationStack.pop())))
+                evaluationstack.append(subtraction(float(evaluationstack.pop()), float(evaluationstack.pop())))
             elif array[i] == "*":
-                evaluationStack.append(multiplication(float(evaluationStack.pop()), float(evaluationStack.pop())))
+                evaluationstack.append(multiplication(float(evaluationstack.pop()), float(evaluationstack.pop())))
             elif array[i] == "/":
-                evaluationStack.append(division(float(evaluationStack.pop()), float(evaluationStack.pop())))
+                evaluationstack.append(division(float(evaluationstack.pop()), float(evaluationstack.pop())))
             elif array[i] == "^":
-                evaluationStack.append(power(float(evaluationStack.pop()), float(evaluationStack.pop())))
-    print(evaluationStack.pop())
+                evaluationstack.append(power(float(evaluationstack.pop()), float(evaluationstack.pop())))
+    print(evaluationstack.pop())
 
 
 # 2.2 Using a stack to store values before an operator is found
@@ -127,4 +130,4 @@ def evaluate(array):
 # 2.3 Add the evaluated value back onto the stack
 
 equationInput = input("Please input the equation for evaluation: ")
-evaluate(RPNconversion(arrayConversion(equationInput)))
+evaluate(rpnconversion(arrayconversion(equationInput)))
