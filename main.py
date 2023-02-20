@@ -1,25 +1,28 @@
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
+def checkpos(val):
+    if val == " ":
+        return True
+    else:
+        return False
+
+
 def arrayconversion(equation):
     data = []
     i = 0
     while i < len(equation):
+        if i < len(equation):
+            if checkpos(equation[i]): i += 1; continue
         value = ""
         while i < len(equation) and equation[i].isdigit():
             value += equation[i]
             i += 1
-        if i > 0:
+        if i > 0 and value != "":
             data.append(value)
         if i < len(equation):
+            if checkpos(equation[i]): i += 1; continue
             data.append(equation[i])
             i += 1
-    j = 0
-    length = len(data)
-    while j < length:
-        if data[j] == '' or data[j] == " ":
-            data.pop(j)
-            length -= 1
-        j += 1
     return data
 
 
