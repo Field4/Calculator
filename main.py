@@ -17,15 +17,17 @@ def arrayconversion(equation):
     value = ""
     operator = True
     for pos in equation:
-        if pos == "*" or pos == "/" or pos == "+" or pos == "(" or pos == ")":
+        if pos == " ":
+            continue
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "(" or pos == ")"):
             if len(value) > 0: data.append(float(value)); value = ""
             data.append(pos); operator = True
-        if pos == "-":  # for negatives
+        elif pos == "-":  # for negatives
             if value == "-": value = ""  # precaution for double negatives
             elif not operator: data.append(float(value)); value = ""; data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
-            else: value += pos; operator = False  # adds the negative to the value
-        if pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
+            else: value += pos  # adds the negative to the value
+        elif pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
     data.append(float(value))
     return data
 
@@ -49,12 +51,7 @@ def rpnconversion(array):
     operator = True
     negative = ""
     for i in range(len(array)):
-        if not operator:
-            negative = ""
-        if isinstance(array[i], (int, float)):
-            operator = False
-            rpnarray.append(negative + array[i])
-        elif array[i] == ")":
+        if array[i] == ")":
             value = stack.pop()
             while value != "(":
                 rpnarray.append(value)
