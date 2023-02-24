@@ -59,21 +59,18 @@ def rpnconversion(array):
     for pos in array:
         if isinstance(pos, float): rpnarray.append(pos)  # if the value is a number append to array
         else:
-            if pos == ")":
-                value = stack.pop()
-                while value != "(":
-                    rpnarray.append(value)
+            if pos == ")":  # if pos is a close bracket
+                value = stack.pop()  # pop the first value off the stack
+                while value != "(":  # while the value is not the open bracket
+                    rpnarray.append(value)  # append the operator to the stack
                     value = stack.pop()
                 value = ""
-            else:
+            else:  # if pos is anything else, an operator
                 if len(stack) > 0:
-                    while stackcheck(pos, stack):
-                        rpnarray.append(stack.pop())
+                    while stackcheck(pos, stack): rpnarray.append(stack.pop())  # Description in stack check
                 stack.append(pos)
-    if len(stack) > 1:
-        stack.reverse()
-    for op in stack:
-        rpnarray.append(op)
+    if len(stack) > 1: stack.reverse()
+    for op in stack: rpnarray.append(op)
 
     return rpnarray
 
