@@ -17,24 +17,30 @@ def arrayconversion(equation):  # WORKS
     for pos in equation:
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "(" or pos == ")"):
+        elif not operator and (pos == "*" or pos == "/" or pos == "+"):
             if len(value) > 0: data.append(float(value)); value = ""
             data.append(pos); operator = True
+        elif pos == "(" or pos == ")":
+            if len(value) > 0: data.append(float(value)); value = ""
+            data.append(pos)
+            if pos == "(": operator = True
         elif pos == "-":  # for negatives
             if value == "-": value = ""  # precaution for double negatives
-            elif not operator: data.append(float(value)); value = ""; data.append(pos); operator = True
+            elif not operator:
+                if len(value) > 0:
+                    data.append(float(value)); value = ""
+                else: data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
             else: value += pos  # adds the negative to the value
         elif pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
-        elif pos == "(":  # allowing the first bracket to be added after an operator
-            if len(value) > 0: data.append(float(value)); value = ""
-            data.append(pos); operator = True
     if len(value) > 0:
         data.append(float(value))  # making sure that the last value is in the array before RPN conversion
     return data
 
 
 def stackcheck(data, array):  # send array[i] and stack from rpn conversion
+    # Compares the operator to the last one on the stack if the data is less important than the stack data then the
+    # stack data is popped off and added to the array, else the data is added to the stack (in rpnConversion)
     importance = {"+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
     length = len(array)
     if data == "(" or data == ")":
@@ -51,22 +57,23 @@ def rpnconversion(array):
     rpnarray = []
     stack = []
     for pos in array:
-        if isinstance(pos, float):
-            rpnarray.append(pos)
+        if isinstance(pos, float): rpnarray.append(pos)  # if the value is a number append to array
         else:
-            if pos == "(":
-                rpnarray.append(stack.pop())
-            elif pos == ")":
+            if pos == ")":
                 value = stack.pop()
                 while value != "(":
                     rpnarray.append(value)
                     value = stack.pop()
                 value = ""
             else:
+                if len(stack) > 0:
+                    while stackcheck(pos, stack):
+                        rpnarray.append(stack.pop())
                 stack.append(pos)
+    if len(stack) > 1:
+        stack.reverse()
     for op in stack:
         rpnarray.append(op)
-
 
     return rpnarray
 
@@ -106,15 +113,15 @@ def evaluate(array):
             evaluationstack.append(array[i])
         else:
             if array[i] == "+":
-                evaluationstack.append(addition(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "-":
-                evaluationstack.append(subtraction(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "*":
-                evaluationstack.append(multiplication(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "/":
-                evaluationstack.append(division(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "^":
-                evaluationstack.append(power(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
     print(evaluationstack.pop())
 
 
