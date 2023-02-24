@@ -7,26 +7,40 @@ def checkpos(val):
         return False
 
 
-def arrayconversion(equation):
+# TODO clean up
+#   RPN conversion
+
+def arrayconversion(equation):  # WORKS
     data = []
-    i = 0
-    while i < len(equation):
-        if i < len(equation):
-            if checkpos(equation[i]): i += 1; continue
-        value = ""
-        while i < len(equation) and equation[i].isdigit():
-            value += equation[i]
-            i += 1
-        if i > 0 and value != "":
-            data.append(value)
-        if i < len(equation):
-            if checkpos(equation[i]): i += 1; continue
-            data.append(equation[i])
-            i += 1
+    value = ""
+    operator = True
+    for pos in equation:
+        if pos == " ":
+            continue
+        elif not operator and (pos == "*" or pos == "/" or pos == "+"):
+            if len(value) > 0: data.append(float(value)); value = ""
+            data.append(pos); operator = True
+        elif pos == "(" or pos == ")":
+            if len(value) > 0: data.append(float(value)); value = ""
+            data.append(pos)
+            if pos == "(": operator = True
+        elif pos == "-":  # for negatives
+            if value == "-": value = ""  # precaution for double negatives
+            elif not operator:
+                if len(value) > 0:
+                    data.append(float(value)); value = ""
+                else: data.append(pos); operator = True
+            # adds the value to the array followed by a negative if there is not an operator before
+            else: value += pos  # adds the negative to the value
+        elif pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
+    if len(value) > 0:
+        data.append(float(value))  # making sure that the last value is in the array before RPN conversion
     return data
 
 
-def stackcheck(data, array):
+def stackcheck(data, array):  # send array[i] and stack from rpn conversion
+    # Compares the operator to the last one on the stack if the data is less important than the stack data then the
+    # stack data is popped off and added to the array, else the data is added to the stack (in rpnConversion)
     importance = {"+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
     length = len(array)
     if data == "(" or data == ")":
@@ -42,42 +56,22 @@ def stackcheck(data, array):
 def rpnconversion(array):
     rpnarray = []
     stack = []
-    operator = True
-    negative = ""
-    for i in range(len(array)):
-        if not operator:
-            negative = ""
-        if array[i].isdigit():
-            operator = False
-            rpnarray.append(negative + array[i])
-        elif array[i] == ")":
-            value = stack.pop()
-            while value != "(":
-                rpnarray.append(value)
-                if len(stack) > 0:
-                    value = stack.pop()
+    for pos in array:
+        if isinstance(pos, float): rpnarray.append(pos)  # if the value is a number append to array
         else:
-            if operator is True and array[i] == "-":
-                if len(rpnarray) == 0 and len(negative) == 1:
-                    negative = ""
-                    operator = True
-                elif len(negative) == 1:
-                    rpnarray.append(array[i])
-                else:
-                    negative += array[i]
-            elif len(stack) > 0:
-                operator = True
-                while stackcheck(array[i], stack):
+            if pos == ")":  # if pos is a close bracket
+                value = stack.pop()  # pop the first value off the stack
+                while value != "(":  # while the value is not the open bracket
+                    rpnarray.append(value)  # append the operator to the stack
                     value = stack.pop()
-                    rpnarray.append(value)
-                stack.append(array[i])
-            else:
-                operator = True
-                stack.append(array[i])
-    if len(stack) - 1 != -1:
-        while len(stack) - 1 != -1:
-            value = stack.pop()
-            rpnarray.append(value)
+                value = ""
+            else:  # if pos is anything else, an operator
+                if len(stack) > 0:
+                    while stackcheck(pos, stack): rpnarray.append(stack.pop())  # Description in stack check
+                stack.append(pos)
+    if len(stack) > 1: stack.reverse()
+    for op in stack: rpnarray.append(op)
+
     return rpnarray
 
 
@@ -110,21 +104,21 @@ def evaluate(array):
             array.pop(count)
     for i in range(len(array)):
         if len(array[i]) > 1 and array[i][0] == "-":
-            if array[i][1:].isdigit():
+            if isinstance(array[i][1:], float) or array[i][1:].isdigit():
                 evaluationstack.append(array[i])
-        elif array[i].isdigit():
+        elif isinstance(array[i], float) or array[i].isdigit():
             evaluationstack.append(array[i])
         else:
             if array[i] == "+":
-                evaluationstack.append(addition(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "-":
-                evaluationstack.append(subtraction(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "*":
-                evaluationstack.append(multiplication(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "/":
-                evaluationstack.append(division(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "^":
-                evaluationstack.append(power(float(evaluationstack.pop()), float(evaluationstack.pop())))
+                evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
     print(evaluationstack.pop())
 
 
@@ -133,4 +127,5 @@ def evaluate(array):
 # 2.3 Add the evaluated value back onto the stack
 
 equationInput = input("Please input the equation for evaluation: ")
-evaluate(rpnconversion(arrayconversion(equationInput)))
+# evaluate(rpnconversion(arrayconversion(equationInput)))
+print(rpnconversion(arrayconversion(equationInput)))
