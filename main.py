@@ -86,10 +86,10 @@ def power(b, a): return a ** b
 # 2.1 Traverse the array L to R
 def evaluate(array):
     evaluationstack = []
-    for i in range(len(array)):
-        if isinstance(array[i], float):
-            evaluationstack.append(array[i])
-        else:
+    for i in range(len(array)):  # loops through the array adding digits to stack/popping them off when operator
+        # encountered
+        if isinstance(array[i], float): evaluationstack.append(array[i])  # adding digit to stack
+        else:  # operator evaluation, adds the number back onto stack once finished
             if array[i] == "+": evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "-": evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
             elif array[i] == "*": evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
@@ -104,4 +104,4 @@ def evaluate(array):
 
 equationInput = input("Please input the equation for evaluation: ")
 evaluate(rpnconversion(arrayconversion(equationInput)))
-print(rpnconversion(arrayconversion(equationInput)))
+
