@@ -1,23 +1,14 @@
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
-def checkpos(val):
-    if val == " ":
-        return True
-    else:
-        return False
 
-
-# TODO clean up
-#   RPN conversion
-
-def arrayconversion(equation):  # WORKS
+def arrayconversion(equation):  # converts the string equation into an array 
     data = []
     value = ""
     operator = True
-    for pos in equation:
+    for pos in equation:  # cycles throught every character in the array
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^"):
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^"):  # If pos is an operator then append to array 
             if len(value) > 0: data.append(float(value)); value = ""
             data.append(pos); operator = True
         elif pos == "(" or pos == ")":
