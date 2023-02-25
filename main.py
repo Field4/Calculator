@@ -5,10 +5,11 @@ def arrayconversion(equation):  # converts the string equation into an array
     data = []
     value = ""
     operator = True
-    for pos in equation:  # cycles throught every character in the array
+    for pos in equation:  # cycles through every character in the array
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^"):  # If pos is an operator then append to array 
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!"):  # If pos is an
+            # operator then append to array
             if len(value) > 0: data.append(float(value)); value = ""
             data.append(pos); operator = True
         elif pos == "(" or pos == ")":
@@ -16,14 +17,18 @@ def arrayconversion(equation):  # converts the string equation into an array
             data.append(pos)
             if pos == "(": operator = True
         elif pos == "-":  # for negatives
-            if value == "-": value = ""  # precaution for double negatives
+            if value == "-":
+                value = ""  # precaution for double negatives
             elif not operator:
                 if len(value) > 0:
                     data.append(float(value)); value = ""
-                else: data.append(pos); operator = True
+                else:
+                    data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
-            else: value += pos  # adds the negative to the value
-        elif pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
+            else:
+                value += pos  # adds the negative to the value
+        elif pos.isdigit() or pos == ".":
+            value += pos; operator = False  # adds the digit to the value
     if len(value) > 0:
         data.append(float(value))  # making sure that the last value is in the array before RPN conversion
     return data
@@ -32,7 +37,7 @@ def arrayconversion(equation):  # converts the string equation into an array
 def stackcheck(data, array):  # send array[i] and stack from rpn conversion
     # Compares the operator to the last one on the stack if the data is less important than the stack data then the
     # stack data is popped off and added to the array, else the data is added to the stack (in rpnConversion)
-    importance = {"+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
+    importance = {"!": 0, "+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
     length = len(array)
     if data == "(" or data == ")":
         return False
@@ -48,7 +53,8 @@ def rpnconversion(array):
     rpnarray = []
     stack = []
     for pos in array:
-        if isinstance(pos, float): rpnarray.append(pos)  # if the value is a number append to array
+        if isinstance(pos, float):
+            rpnarray.append(pos)  # if the value is a number append to array
         else:
             if pos == ")":  # if pos is a close bracket
                 value = stack.pop()  # pop the first value off the stack
@@ -68,10 +74,23 @@ def rpnconversion(array):
 
 # 2 Solve the equation
 def addition(b, a): return a + b
+
+
 def subtraction(b, a): return a - b
+
+
 def multiplication(b, a): return a * b
+
+
 def division(b, a): return a / b
+
+
 def power(b, a): return a ** b
+
+
+def factorial(a, i):
+    if a > 0: i *= a; a -= 1; return factorial(a, i)
+    else: return i
 
 
 # 2.1 Traverse the array L to R
@@ -79,13 +98,21 @@ def evaluate(array):
     evaluationstack = []
     for i in range(len(array)):  # loops through the array adding digits to stack/popping them off when operator
         # encountered
-        if isinstance(array[i], float): evaluationstack.append(array[i])  # adding digit to stack
+        if isinstance(array[i], float):
+            evaluationstack.append(array[i])  # adding digit to stack
         else:  # operator evaluation, adds the number back onto stack once finished
-            if array[i] == "+": evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "-": evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "*": evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "/": evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "^": evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
+            if array[i] == "+":
+                evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "-":
+                evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "*":
+                evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "/":
+                evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "^":
+                evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "!":
+                evaluationstack.append(factorial(evaluationstack.pop(), 1))
     print(evaluationstack.pop())
 
 
@@ -95,4 +122,3 @@ def evaluate(array):
 
 equationInput = input("Please input the equation for evaluation: ")
 evaluate(rpnconversion(arrayconversion(equationInput)))
-
