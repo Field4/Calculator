@@ -9,16 +9,13 @@ def arrayconversion(equation):  # converts the string equation into an array
         if pos == " ":
             continue
         elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!"):  # If pos is an
-            # operator then append to array
-            if len(value) > 0: data.append(float(value)); value = ""
-            data.append(pos); operator = True
-        elif pos == "(" or pos == ")":
-            if len(value) > 0: data.append(float(value)); value = ""
-            data.append(pos)
-            if pos == "(": operator = True
+            # operator then do as below
+            if len(value) > 0: data.append(float(value)); value = ""  # check if value holds anything, if so then append
+            # and clear the value
+            data.append(pos)  # then append operator
+            if pos != ")": operator = True  # only if not close bracket then make operator True
         elif pos == "-":  # for negatives
-            if value == "-":
-                value = ""  # precaution for double negatives
+            if value == "-": value = ""  # precaution for double negatives
             elif not operator:
                 if len(value) > 0:
                     data.append(float(value)); value = ""
@@ -88,7 +85,7 @@ def division(b, a): return a / b
 def power(b, a): return a ** b
 
 
-def factorial(a, i):
+def factorial(a, i):  # recursive factorial function
     if a > 0: i *= a; a -= 1; return factorial(a, i)
     else: return i
 
