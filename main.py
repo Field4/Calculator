@@ -17,7 +17,7 @@ def arrayconversion(equation):  # WORKS
     for pos in equation:
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+"):
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^"):
             if len(value) > 0: data.append(float(value)); value = ""
             data.append(pos); operator = True
         elif pos == "(" or pos == ")":
@@ -76,49 +76,25 @@ def rpnconversion(array):
 
 
 # 2 Solve the equation
-def addition(b, a):
-    return a + b
-
-
-def subtraction(b, a):
-    return a - b
-
-
-def multiplication(b, a):
-    return a * b
-
-
-def division(b, a):
-    return a / b
-
-
-def power(b, a):
-    return a ** b
+def addition(b, a): return a + b
+def subtraction(b, a): return a - b
+def multiplication(b, a): return a * b
+def division(b, a): return a / b
+def power(b, a): return a ** b
 
 
 # 2.1 Traverse the array L to R
 def evaluate(array):
     evaluationstack = []
-    for count in range(len(array)):
-        if array[count] == " ":
-            array.pop(count)
     for i in range(len(array)):
-        if len(array[i]) > 1 and array[i][0] == "-":
-            if isinstance(array[i][1:], float) or array[i][1:].isdigit():
-                evaluationstack.append(array[i])
-        elif isinstance(array[i], float) or array[i].isdigit():
+        if isinstance(array[i], float):
             evaluationstack.append(array[i])
         else:
-            if array[i] == "+":
-                evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "-":
-                evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "*":
-                evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "/":
-                evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "^":
-                evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
+            if array[i] == "+": evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "-": evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "*": evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "/": evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "^": evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
     print(evaluationstack.pop())
 
 
@@ -127,5 +103,5 @@ def evaluate(array):
 # 2.3 Add the evaluated value back onto the stack
 
 equationInput = input("Please input the equation for evaluation: ")
-# evaluate(rpnconversion(arrayconversion(equationInput)))
+evaluate(rpnconversion(arrayconversion(equationInput)))
 print(rpnconversion(arrayconversion(equationInput)))
