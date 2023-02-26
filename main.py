@@ -1,4 +1,4 @@
-import math
+import numpy as np
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
 
@@ -24,7 +24,7 @@ def arrayconversion(equation):  # converts the string equation into an array
             elif not operator:
                 if len(value) > 0: data.append(float(value)); value = ""
                 elif len(function) > 0: data.append(function); function = ""
-                else: data.append(pos); operator = True
+                data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
             else: value += pos  # adds the negative to the value
         elif pos.isdigit() or pos == ".":
@@ -100,13 +100,13 @@ def factorial(a, i):  # recursive factorial function
     else: return i
 
 
-def sine(a): return math.sin(math.radians(a))
+def sine(a): return round(np.sin(np.radians(a)), 8)
 
 
-def tangent(a): return math.tan(math.radians(a))
+def tangent(a): return round(np.tan(np.radians(a)), 8)
 
 
-def cosine(a): return math.cos(math.radians(a))
+def cosine(a): return round(np.cos(np.radians(a)), 8)
 
 
 # 2.1 Traverse the array L to R
