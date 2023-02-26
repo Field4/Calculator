@@ -13,29 +13,28 @@ def arrayconversion(equation):  # converts the string equation into an array
             continue
         elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):  # If pos is an
             # operator then do as below
-            if len(value) > 0:
+            if len(value) > 0:  # SIMILAR FUNCTION
                 data.append(float(value)); value = ""  # check if value holds anything, if so then append and clear the value
                 if pos == "(": data.append("*")
-            if len(function) > 0: data.append(function); function = ""
+            if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
             data.append(pos)  # then append operator
             if pos != ")": operator = True  # only if not close bracket then make operator True
         elif pos == "-":  # for negatives
             if value == "-": value = ""  # precaution for double negatives
             elif not operator:
-                if len(value) > 0: data.append(float(value)); value = ""
-                elif len(function) > 0: data.append(function); function = ""
+                if len(value) > 0: data.append(float(value)); value = ""  # SIMILAR FUNCTION
+                elif len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
                 data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
             else: value += pos  # adds the negative to the value
         elif pos.isdigit() or pos == ".":
             value += pos; operator = False  # adds the digit to the value
-            if len(function) > 0: data.append(function); function = ""
+            if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
         # for trig functions
         else:
             function += pos; operator = False
-            if len(value) > 0:
-                data.append(float(value)); value = ""; data.append("*")
-                # check if value holds anything, if so then append and clear the value, add a "*" on the end to multiply values
+            if len(value) > 0: data.append(float(value)); value = ""; data.append("*")  # SIMILAR FUNCTION
+            # check if value holds anything, if so then append and clear the value, add a "*" on the end to multiply values
     if len(value) > 0:
         data.append(float(value))  # making sure that the last value is in the array before RPN conversion
     return data
@@ -50,8 +49,7 @@ def stackcheck(data, array):  # send array[i] and stack from rpn conversion
         return False
     elif length > 0:
         value = importance[array[len(array) - 1]]
-        if value > importance[data]:
-            return True
+        if value > importance[data]: return True
     return False
 
 
@@ -73,9 +71,8 @@ def rpnconversion(array):
                 if len(stack) > 0:
                     while stackcheck(pos, stack): rpnarray.append(stack.pop())  # Description in stack check
                 stack.append(pos)
-    if len(stack) > 1: stack.reverse()
+    if len(stack) > 1: stack.reverse()  # reverses stack so the operators get added in the correct order
     for op in stack: rpnarray.append(op)
-
     return rpnarray
 
 
