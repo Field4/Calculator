@@ -5,6 +5,7 @@ def arrayconversion(equation):  # converts the string equation into an array
     data = []
     value = ""
     operator = True
+    function = ""
     for pos in equation:  # cycles through every character in the array
         if pos == " ":
             continue
@@ -17,15 +18,15 @@ def arrayconversion(equation):  # converts the string equation into an array
         elif pos == "-":  # for negatives
             if value == "-": value = ""  # precaution for double negatives
             elif not operator:
-                if len(value) > 0:
-                    data.append(float(value)); value = ""
-                else:
-                    data.append(pos); operator = True
+                if len(value) > 0: data.append(float(value)); value = ""
+                else: data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
-            else:
-                value += pos  # adds the negative to the value
-        elif pos.isdigit() or pos == ".":
-            value += pos; operator = False  # adds the digit to the value
+            else: value += pos  # adds the negative to the value
+        elif pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
+        # for trig functions
+
+
+
     if len(value) > 0:
         data.append(float(value))  # making sure that the last value is in the array before RPN conversion
     return data
