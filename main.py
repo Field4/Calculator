@@ -14,21 +14,26 @@ def arrayconversion(equation):  # converts the string equation into an array
         elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):  # If pos is an
             # operator then do as below
             if len(value) > 0:  # SIMILAR FUNCTION
-                data.append(float(value)); value = ""  # check if value holds anything, if so then append and clear the value
+                data.append(float(value)); value = ""
                 if pos == "(": data.append("*")
             if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
             data.append(pos)  # then append operator
             if pos != ")": operator = True  # only if not close bracket then make operator True
-        elif pos == "-":  # for negatives
+        elif pos == "-":
             if value == "-": value = ""  # precaution for double negatives
             elif not operator:
                 if len(value) > 0: data.append(float(value)); value = ""  # SIMILAR FUNCTION
                 elif len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
                 data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
-            else: value += pos  # adds the negative to the value
+            else: value += pos
+        elif pos == "(":
+            data.append(pos)  # allows for when a bracket begins the equation
+            if len(value) > 0:  # SIMILAR FUNCTION
+                data.append(float(value)); value = ""
+                if pos == "(": data.append("*")
         elif pos.isdigit() or pos == ".":
-            value += pos; operator = False  # adds the digit to the value
+            value += pos; operator = False
             if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
         # for trig functions
         else:
@@ -36,7 +41,7 @@ def arrayconversion(equation):  # converts the string equation into an array
             if len(value) > 0: data.append(float(value)); value = ""; data.append("*")  # SIMILAR FUNCTION
             # check if value holds anything, if so then append and clear the value, add a "*" on the end to multiply values
     if len(value) > 0:
-        data.append(float(value))  # making sure that the last value is in the array before RPN conversion
+        data.append(float(value))
     return data
 
 
@@ -129,6 +134,6 @@ def evaluate(array):
 # 2.2 Using a stack to store values before an operator is found
 # 2.3 Once operator is found the pop the first two items off the stack and evaluate
 # 2.3 Add the evaluated value back onto the stack
-
-equationInput = input("Please input the equation for evaluation: ")
-evaluate(rpnconversion(arrayconversion(equationInput)))
+for j in range(14):
+    equationInput = input("Please input the equation for evaluation: ")
+    evaluate(rpnconversion(arrayconversion(equationInput)))
