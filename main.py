@@ -44,7 +44,7 @@ def arrayconversion(equation):  # converts the string equation into an array
 def stackcheck(data, array):  # send array[i] and stack from rpn conversion
     # Compares the operator to the last one on the stack if the data is less important than the stack data then the
     # stack data is popped off and added to the array, else the data is added to the stack (in rpnConversion)
-    importance = {"sin": 4, "cos": 4, "tan": 4, "!": 0, "+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
+    importance = {"sin": 4, "cos": 4, "tan": 4, "!": 4, "+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
     length = len(array)
     if data == "(" or data == ")":
         return False
