@@ -27,11 +27,13 @@ def arrayconversion(equation):  # converts the string equation into an array
                 data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
             else: value += pos
-        elif pos == "(":
-            data.append(pos)  # allows for when a bracket begins the equation
+        elif pos == "(":  # allows for when a bracket begins the equation
             if len(value) > 0:  # SIMILAR FUNCTION
+                if value == "-":
+                    value += "1"
                 data.append(float(value)); value = ""
                 if pos == "(": data.append("*")
+            data.append(pos)
         elif pos.isdigit() or pos == ".":
             value += pos; operator = False
             if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
