@@ -8,10 +8,12 @@ def arrayconversion(equation):  # converts the string equation into an array
     for pos in equation:  # cycles through every character in the array
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!"):  # If pos is an
-            # operator then do as below
-            if len(value) > 0: data.append(float(value)); value = ""  # check if value holds anything, if so then append
-            # and clear the value
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):
+            # If pos is an operator then do as below
+            if len(value) > 0:
+                data.append(float(value)); value = ""  # check if value holds anything, if so then append and clear the value
+                if pos == "(":
+                    data.append("*")
             data.append(pos)  # then append operator
             if pos != ")": operator = True  # only if not close bracket then make operator True
         elif pos == "-":  # for negatives
