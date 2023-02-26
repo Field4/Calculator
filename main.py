@@ -9,22 +9,28 @@ def arrayconversion(equation):  # converts the string equation into an array
     for pos in equation:  # cycles through every character in the array
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!"):  # If pos is an
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):  # If pos is an
             # operator then do as below
-            if len(value) > 0: data.append(float(value)); value = ""  # check if value holds anything, if so then append
-            # and clear the value
+            if len(value) > 0:
+                data.append(float(value)); value = ""  # check if value holds anything, if so then append and clear the value
+                if pos == "(": data.append("*")
+            if len(function) > 0: data.append(function); function = ""
             data.append(pos)  # then append operator
             if pos != ")": operator = True  # only if not close bracket then make operator True
         elif pos == "-":  # for negatives
             if value == "-": value = ""  # precaution for double negatives
             elif not operator:
                 if len(value) > 0: data.append(float(value)); value = ""
+                elif len(function) > 0: data.append(function); function = ""
                 else: data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
             else: value += pos  # adds the negative to the value
-        elif pos.isdigit() or pos == ".": value += pos; operator = False  # adds the digit to the value
+        elif pos.isdigit() or pos == ".":
+            value += pos; operator = False  # adds the digit to the value
+            if len(function) > 0: data.append(function); function = ""
         # for trig functions
-
+        else:
+            function += pos
 
 
     if len(value) > 0:
