@@ -100,13 +100,13 @@ def factorial(a, i):  # recursive factorial function
     else: return i
 
 
-def sine(a): return round(np.sin(np.radians(a)), 8)
+def sine(a): return round(np.sin(np.radians(a)), 10)
 
 
-def tangent(a): return round(np.tan(np.radians(a)), 8)
+def tangent(a): return round(np.tan(np.radians(a)), 10)
 
 
-def cosine(a): return round(np.cos(np.radians(a)), 8)
+def cosine(a): return round(np.cos(np.radians(a)), 10)
 
 
 # 2.1 Traverse the array L to R
