@@ -1,33 +1,41 @@
+import numpy as np
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
+
 
 def arrayconversion(equation):  # converts the string equation into an array 
     data = []
     value = ""
     operator = True
+    function = ""
     for pos in equation:  # cycles through every character in the array
         if pos == " ":
             continue
-        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):
-            # If pos is an operator then do as below
+        elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):  # If pos is an
+            # operator then do as below
             if len(value) > 0:
                 data.append(float(value)); value = ""  # check if value holds anything, if so then append and clear the value
-                if pos == "(":
-                    data.append("*")
+                if pos == "(": data.append("*")
+            if len(function) > 0: data.append(function); function = ""
             data.append(pos)  # then append operator
             if pos != ")": operator = True  # only if not close bracket then make operator True
         elif pos == "-":  # for negatives
             if value == "-": value = ""  # precaution for double negatives
             elif not operator:
-                if len(value) > 0:
-                    data.append(float(value)); value = ""
-                else:
-                    data.append(pos); operator = True
+                if len(value) > 0: data.append(float(value)); value = ""
+                elif len(function) > 0: data.append(function); function = ""
+                data.append(pos); operator = True
             # adds the value to the array followed by a negative if there is not an operator before
-            else:
-                value += pos  # adds the negative to the value
+            else: value += pos  # adds the negative to the value
         elif pos.isdigit() or pos == ".":
             value += pos; operator = False  # adds the digit to the value
+            if len(function) > 0: data.append(function); function = ""
+        # for trig functions
+        else:
+            function += pos; operator = False
+            if len(value) > 0:
+                data.append(float(value)); value = ""; data.append("*")
+                # check if value holds anything, if so then append and clear the value, add a "*" on the end to multiply values
     if len(value) > 0:
         data.append(float(value))  # making sure that the last value is in the array before RPN conversion
     return data
@@ -36,7 +44,7 @@ def arrayconversion(equation):  # converts the string equation into an array
 def stackcheck(data, array):  # send array[i] and stack from rpn conversion
     # Compares the operator to the last one on the stack if the data is less important than the stack data then the
     # stack data is popped off and added to the array, else the data is added to the stack (in rpnConversion)
-    importance = {"!": 0, "+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
+    importance = {"sin": 4, "cos": 4, "tan": 4, "!": 0, "+": 1, "-": 1, "*": 2, "/": 2, "(": -1, ")": -1, "^": 3}
     length = len(array)
     if data == "(" or data == ")":
         return False
@@ -92,6 +100,15 @@ def factorial(a, i):  # recursive factorial function
     else: return i
 
 
+def sine(a): return round(np.sin(np.radians(a)), 8)
+
+
+def tangent(a): return round(np.tan(np.radians(a)), 8)
+
+
+def cosine(a): return round(np.cos(np.radians(a)), 8)
+
+
 # 2.1 Traverse the array L to R
 def evaluate(array):
     evaluationstack = []
@@ -100,18 +117,15 @@ def evaluate(array):
         if isinstance(array[i], float):
             evaluationstack.append(array[i])  # adding digit to stack
         else:  # operator evaluation, adds the number back onto stack once finished
-            if array[i] == "+":
-                evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "-":
-                evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "*":
-                evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "/":
-                evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "^":
-                evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
-            elif array[i] == "!":
-                evaluationstack.append(factorial(evaluationstack.pop(), 1))
+            if array[i] == "+": evaluationstack.append(addition(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "-": evaluationstack.append(subtraction(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "*": evaluationstack.append(multiplication(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "/": evaluationstack.append(division(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "^": evaluationstack.append(power(evaluationstack.pop(), evaluationstack.pop()))
+            elif array[i] == "!": evaluationstack.append(factorial(evaluationstack.pop(), 1))
+            elif array[i] == "sin": evaluationstack.append(sine(evaluationstack.pop()))
+            elif array[i] == "cos": evaluationstack.append(cosine(evaluationstack.pop()))
+            elif array[i] == "tan": evaluationstack.append(tangent(evaluationstack.pop()))
     print(evaluationstack.pop())
 
 
