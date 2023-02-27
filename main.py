@@ -2,13 +2,18 @@ import numpy as np
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
 
-# def lengthcheck(val, func, arr, char):
-#     if len(val) > 0:  # SIMILAR FUNCTION
-#         if char == "(":
-#             if val == "-": val += 1
-#         arr.append(float(val)); val = ""
-#     if len(func) > 0: arr.append(func); func = ""
-#     return val, func, arr
+
+def lengthcheck(val, func, arr, char, op):
+    if len(val) > 0:  # SIMILAR FUNCTION
+        if char == "(":
+            if val == "-": val += "1"
+            arr.append(float(val)); val = ""
+            arr.append("*")
+        else: arr.append(float(val)); val = ""
+    if len(func) > 0: arr.append(func); func = ""
+    if not op and char == "(": arr.append("*")
+    arr.append(char)
+    return val, func, arr
 
 
 def arrayconversion(equation):  # converts the string equation into an array 
@@ -21,27 +26,17 @@ def arrayconversion(equation):  # converts the string equation into an array
             continue
         elif not operator and (pos == "*" or pos == "/" or pos == "+" or pos == "^" or pos == "!" or pos == "(" or pos == ")"):  # If pos is an
             # operator then do as below
-            if len(value) > 0:  # SIMILAR FUNCTION
-                data.append(float(value)); value = ""
-            if pos == "(": data.append("*")
-            if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
-            data.append(pos)  # then append operator
+            value, function, data = lengthcheck(value, function, data, pos, operator)
             if pos != ")": operator = True  # only if not close bracket then make operator True
         elif pos == "-":
             if value == "-": value = ""  # precaution for double negatives
             elif not operator:
-                if len(value) > 0: data.append(float(value)); value = ""  # SIMILAR FUNCTION
-                elif len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
-                data.append(pos); operator = True
+                value, function, data = lengthcheck(value, function, data, pos, operator)
+                operator = True
             # adds the value to the array followed by a negative if there is not an operator before
             else: value += pos
         elif pos == "(":  # allows for when a bracket begins the equation
-            if len(value) > 0:  # SIMILAR FUNCTION
-                if value == "-":
-                    value += "1"
-                data.append(float(value)); value = ""
-                data.append("*")
-            data.append(pos)
+            value, function, data = lengthcheck(value, function, data, pos, operator)
         elif pos.isdigit() or pos == ".":
             value += pos; operator = False
             if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
