@@ -2,6 +2,14 @@ import numpy as np
 # 1 Evaluate into RPN
 # 1.1 extract each digit and operator and enter into an array in the same order given
 
+# def lengthcheck(val, func, arr, char):
+#     if len(val) > 0:  # SIMILAR FUNCTION
+#         if char == "(":
+#             if val == "-": val += 1
+#         arr.append(float(val)); val = ""
+#     if len(func) > 0: arr.append(func); func = ""
+#     return val, func, arr
+
 
 def arrayconversion(equation):  # converts the string equation into an array 
     data = []
