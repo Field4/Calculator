@@ -15,7 +15,7 @@ def arrayconversion(equation):  # converts the string equation into an array
             # operator then do as below
             if len(value) > 0:  # SIMILAR FUNCTION
                 data.append(float(value)); value = ""
-                if pos == "(": data.append("*")
+            if pos == "(": data.append("*")
             if len(function) > 0: data.append(function); function = ""  # SIMILAR FUNCTION
             data.append(pos)  # then append operator
             if pos != ")": operator = True  # only if not close bracket then make operator True
@@ -32,7 +32,7 @@ def arrayconversion(equation):  # converts the string equation into an array
                 if value == "-":
                     value += "1"
                 data.append(float(value)); value = ""
-                if pos == "(": data.append("*")
+                data.append("*")
             data.append(pos)
         elif pos.isdigit() or pos == ".":
             value += pos; operator = False
@@ -136,6 +136,6 @@ def evaluate(array):
 # 2.2 Using a stack to store values before an operator is found
 # 2.3 Once operator is found the pop the first two items off the stack and evaluate
 # 2.3 Add the evaluated value back onto the stack
-for j in range(14):
-    equationInput = input("Please input the equation for evaluation: ")
-    evaluate(rpnconversion(arrayconversion(equationInput)))
+
+equationInput = input("Please input the equation for evaluation: ")
+evaluate(rpnconversion(arrayconversion(equationInput)))
